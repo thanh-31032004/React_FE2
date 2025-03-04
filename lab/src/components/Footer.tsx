@@ -3,7 +3,7 @@ import { Facebook, Twitter, Instagram, LinkedIn } from '@mui/icons-material';
 export const Footer = () => {
     return (
 
-        <AppBar position="static" sx={{ top: 'auto', bottom: 0, backgroundColor: "#6AD4DD", padding: 2 }}>
+        <AppBar position="static" sx={{ top: 'auto', bottom: 0, backgroundColor: "#333", padding: 2 }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="h6" color="inherit">
                     TShop

@@ -4,12 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Product } from "src/types/Product";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Alert, Button, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Button, Container, IconButton, Stack, TextField, Typography, Box } from "@mui/material";
 import Loading from "src/components/Loading";
 import { useProductCart } from "src/hooks/useProductCarts";
-
-
-
 
 function ProductDetail() {
     const { id } = useParams();
@@ -20,24 +17,10 @@ function ProductDetail() {
     const navigate = useNavigate();
     const { addToCart } = useProductCart();
 
-
-
     const handleAddToCart = (product: Product) => {
         if (quantity <= 0) return;
-        // toast.success('Successfully!', {
-        //     position: "top-right",
-        //     autoClose: 5000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: "colored",
-        //     transition: Bounce,
-        // });
         addToCart({ product, quantity });
     };
-
 
     const getProduct = async (id: string) => {
         try {
@@ -48,7 +31,6 @@ function ProductDetail() {
         } catch (error) {
             console.log(error);
             setError('Failed to load products. Please try again.');
-            // navigate('/notfound');
         } finally {
             setTimeout(() => {
                 setLoading(false);
@@ -64,9 +46,9 @@ function ProductDetail() {
     return (
         <>
             <Loading isShow={loading} />
-            <Container sx={{ mt: 4, marginBottom: 10 }}>
+            <Container sx={{ mt: 12, mb: 12 }}>
                 <Typography variant="h4" gutterBottom>
-                    Chi tiết sản phẩm
+                    Product Details
                 </Typography>
                 {error && (
                     <Alert severity="error" sx={{ mb: 3 }}>
@@ -75,26 +57,22 @@ function ProductDetail() {
                 )}
                 {product && (
                     <Stack direction={{ xs: 'column', md: 'row' }} gap={3} alignItems={{ xs: 'center', md: 'flex-start' }}>
-                        <img
-                            src={product.image}
-                            alt={product.title}
-                            width={"100%"}
-                            style={{ maxWidth: '500px', objectFit: 'contain' }}
-                        />
+                        <Box sx={{ width: '100%', maxWidth: '400px', textAlign: 'center', border: '1px solid #ccc', padding: 2, borderRadius: 2 }}>
+                            <img
+                                src={product.image}
+                                alt={product.title}
+                                width={"100%"}
+                                style={{ objectFit: 'contain', height: 'auto' }}
+                            />
+                        </Box>
                         <Stack gap={3} sx={{ width: '100%', maxWidth: '600px' }}>
                             <Typography component="h1" fontSize={"26px"} fontWeight="bold">
                                 {product.title}
                             </Typography>
-                            <Typography fontWeight={"bold"} color={"Highlight"} fontSize={"24px"}>
+                            <Typography fontWeight={"bold"} color={"#ff5722"} fontSize={"24px"}>
                                 ${product.price}
                             </Typography>
-                            {/* <Typography fontSize={"20px"} color="textSecondary">
-                                {product.category}
-                            </Typography> */}
-                            {/* <Typography fontSize={"20px"} color="textSecondary">
-                                Rate: {product.rating.count}
-                            </Typography> */}
-                            <Typography variant="body1">
+                            <Typography variant="body1" sx={{ color: '#666' }}>
                                 {product.description}
                             </Typography>
                             <Stack direction="row" alignItems="center" gap={2}>
@@ -103,17 +81,20 @@ function ProductDetail() {
                                 </IconButton>
                                 <TextField
                                     id="outlined-basic"
-                                    label="quantity"
+                                    label="Quantity"
                                     variant="outlined"
                                     type="number"
                                     value={quantity}
                                     onChange={(e) => setQuantity(Number(e.target.value))}
+                                    sx={{ width: '80px' }}
                                 />
                                 <IconButton onClick={() => setQuantity(quantity + 1)}>
                                     <AddIcon />
                                 </IconButton>
                             </Stack>
-                            <Button variant="outlined" onClick={() => handleAddToCart(product)}>Add to cart</Button>
+                            <Button variant="contained" color="primary" onClick={() => handleAddToCart(product)} sx={{ textTransform: 'none' }}>
+                                Add to Cart
+                            </Button>
                         </Stack>
                     </Stack>
                 )}

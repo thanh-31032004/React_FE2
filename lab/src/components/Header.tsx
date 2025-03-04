@@ -1,6 +1,5 @@
-
 import { AppBar, Toolbar, Typography, Button, Box, Avatar, InputBase, Paper, IconButton, Badge, Menu, MenuItem } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { useMemo, useState } from 'react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -9,6 +8,7 @@ import { useCart } from 'src/context/cart';
 export const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { cart } = useCart();
+    const location = useLocation();
     const cartQuantity = useMemo(
         () => cart && cart.products ? cart.products.reduce((total, { quantity }) => total + quantity, 0) : 0,
         [cart]
@@ -20,22 +20,23 @@ export const Header = () => {
     const handleLogout = () => {
         setIsLoggedIn(false);
     };
+
     return (
         <>
-            <AppBar position="fixed" sx={{ backgroundColor: '#6AD4DD', }}>
+            <AppBar position="fixed" sx={{ backgroundColor: '#333', }}>
                 <Toolbar>
                     <Typography component={Link}
-                        to="/" variant="h6" sx={{ marginRight: 4 }}>
+                        to="/" variant="h6" sx={{ marginRight: 4, color: '#fff', textDecoration: 'none', fontFamily: 'Roboto, sans-serif', fontWeight: 'bold' }}>
                         TShop
                     </Typography>
                     <Box>
-                        <Button color="inherit" component={Link} to="/products" sx={{ mr: 2 }}>
+                        <Button color="inherit" component={Link} to="/products" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                             Products
                         </Button>
-                        <Button color="inherit" component={Link} to="/categories" sx={{ mr: 2 }}>
+                        <Button color="inherit" component={Link} to="/categories" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                             Categories
                         </Button>
-                        <Button color="inherit" component={Link} to="/news" sx={{ mr: 2 }}>
+                        <Button color="inherit" component={Link} to="/news" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                             News
                         </Button>
                     </Box>
@@ -54,7 +55,7 @@ export const Header = () => {
                     >
                         <InputBase
                             placeholder="Search Products"
-                            sx={{ ml: 1, flex: 1 }}
+                            sx={{ ml: 1, flex: 1, fontFamily: 'Roboto, sans-serif' }}
                             inputProps={{ 'aria-label': 'search products' }}
                         />
                         <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
@@ -69,7 +70,7 @@ export const Header = () => {
                         </IconButton>
                         {isLoggedIn ? (
                             <>
-                                <IconButton >
+                                <IconButton>
                                     <Avatar alt="User Avatar" src="/path/to/avatar.jpg" sx={{ mr: 2 }} />
                                 </IconButton>
                                 {/* <Menu
@@ -81,13 +82,12 @@ export const Header = () => {
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu> */}
                             </>
-
                         ) : (
                             <>
-                                <Button color="inherit" component={Link} to="/login" sx={{ mr: 2 }}>
+                                <Button color="inherit" component={Link} to="/login" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                                     Login
                                 </Button>
-                                <Button color="inherit" component={Link} to="/register" sx={{ mr: 2 }}>
+                                <Button color="inherit" component={Link} to="/register" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                                     Register
                                 </Button>
                             </>
@@ -95,21 +95,29 @@ export const Header = () => {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Box
-                sx={{
-                    backgroundImage: 'url(https://tipsmake.com/data/images/collection-of-the-most-beautiful-fashion-banners-picture-19-vcJMcqXF3.jpg)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
+            {location.pathname === '/' && (
+                <Box
+                    sx={{
+                        backgroundImage: 'url(https://tipsmake.com/data/images/collection-of-the-most-beautiful-fashion-banners-picture-19-vcJMcqXF3.jpg)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        width: '100%',
+                        height: '100vh',
+                        textAlign: 'center',
+                        color: '#fff',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                        mt: 8,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontFamily: 'Roboto, sans-serif',
+                        fontWeight: 'bold',
+                        fontSize: '2rem',
+                    }}
+                >
 
-                    width: '100%',
-                    height: '100vh',
-                    textAlign: 'center',
-                    color: '#fff',
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    mt: 8,
-                }}
-            >
-            </Box>
+                </Box>
+            )}
         </>
     );
 };
