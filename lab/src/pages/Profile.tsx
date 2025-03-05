@@ -12,7 +12,7 @@ const ProfilePage = () => {
         if (user) {
             const fetchOrders = async () => {
                 try {
-                    // Adjust the endpoint to match your API
+
                     const response = await axios.get(`/orders/user/${user._id}`);
                     setOrders(response.data);
                 } catch (error) {
@@ -27,6 +27,9 @@ const ProfilePage = () => {
     }, [user]);
 
     if (loading) return <Typography>Loading...</Typography>;
+
+
+    const paidOrders = orders.filter(order => order.status === 'paid');
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 10 }}>
@@ -45,10 +48,10 @@ const ProfilePage = () => {
             <Typography variant="h5" gutterBottom>
                 Purchase History
             </Typography>
-            {orders.length === 0 ? (
-                <Typography>No orders found.</Typography>
+            {paidOrders.length === 0 ? (
+                <Typography>No paid orders found.</Typography>
             ) : (
-                orders.map((order: any, index: number) => (
+                paidOrders.map((order: any, index: number) => (
                     <Stack key={index} spacing={2} mb={4}>
                         <Typography variant="h6">Order #{order._id}</Typography>
                         {order.products.map((item: any, idx: number) => (

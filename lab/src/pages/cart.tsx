@@ -87,7 +87,6 @@ const Cart = () => {
                         Total: {totalPrice.toLocaleString()}$
                     </Typography>
                 </Summary>
-
                 <ActionButtons>
                     <Link to="/checkout">
                         <Button sx={{
@@ -104,6 +103,7 @@ const Cart = () => {
                         </Button>
                     </Link>
                 </ActionButtons>
+
             </Container>
         </>
     );

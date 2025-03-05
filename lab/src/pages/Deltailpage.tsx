@@ -7,6 +7,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { Alert, Button, Container, IconButton, Stack, TextField, Typography, Box } from "@mui/material";
 import Loading from "src/components/Loading";
 import { useProductCart } from "src/hooks/useProductCarts";
+import LoginPromptDialog from "src/components/Comfirmdialog";
+
 
 function ProductDetail() {
     const { id } = useParams();
@@ -14,12 +16,22 @@ function ProductDetail() {
     const [product, setProduct] = useState<Product | undefined>();
     const [quantity, setQuantity] = useState(1);
     const [error, setError] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const { addToCart } = useProductCart();
 
     const handleAddToCart = (product: Product) => {
+        const token = localStorage.getItem('user');
+        if (!token) {
+            setOpen(true);
+            return;
+        }
         if (quantity <= 0) return;
         addToCart({ product, quantity });
+    };
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const getProduct = async (id: string) => {
@@ -46,7 +58,7 @@ function ProductDetail() {
     return (
         <>
             <Loading isShow={loading} />
-            <Container sx={{ mt: 12, mb: 12 }}>
+            <Container sx={{ mt: 12, mb: 24 }}>
                 <Typography variant="h4" gutterBottom>
                     Product Details
                 </Typography>
@@ -99,6 +111,7 @@ function ProductDetail() {
                     </Stack>
                 )}
             </Container>
+            <LoginPromptDialog open={open} onClose={handleClose} />
         </>
     );
 }

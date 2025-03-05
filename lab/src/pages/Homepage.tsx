@@ -10,7 +10,7 @@ function Homepage() {
     const { setLoading } = useLoading();
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState(1);
-    const [itemsPerPage] = useState(8); // Number of items per page
+    const [itemsPerPage] = useState(8);
 
     const getAllProduct = async () => {
         try {

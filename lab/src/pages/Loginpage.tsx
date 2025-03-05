@@ -50,6 +50,7 @@ const LoginPage = () => {
 
             setTimeout(() => {
                 navigate('/', { state: { user: response.data.user } });
+                window.location.reload();
             }, 1000);
         } catch (error) {
             setError('Please try again.');

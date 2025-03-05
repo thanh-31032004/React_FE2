@@ -1,25 +1,46 @@
-import { AppBar, Toolbar, Typography, Button, Box, Avatar, InputBase, Paper, IconButton, Badge, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, Avatar, InputBase, Paper, IconButton, Badge } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCart } from 'src/context/cart';
+import LoginPromptDialog from 'src/components/Comfirmdialog';
 
 export const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [open, setOpen] = useState(false);
     const { cart } = useCart();
     const location = useLocation();
     const cartQuantity = useMemo(
         () => cart && cart.products ? cart.products.reduce((total, { quantity }) => total + quantity, 0) : 0,
         [cart]
     );
-    const handleLogin = () => {
-        setIsLoggedIn(true);
-    };
 
     const handleLogout = () => {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        window.location.reload();
         setIsLoggedIn(false);
     };
+
+    const handleCartClick = () => {
+        if (!isLoggedIn) {
+            setOpen(true);
+        } else {
+            window.location.href = '/cart';
+        }
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem('user');
+        if (token) {
+            setIsLoggedIn(true);
+        }
+    }, []);
 
     return (
         <>
@@ -33,8 +54,8 @@ export const Header = () => {
                         <Button color="inherit" component={Link} to="/products" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                             Products
                         </Button>
-                        <Button color="inherit" component={Link} to="/categories" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
-                            Categories
+                        <Button color="inherit" component={Link} to="/about" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
+                            About
                         </Button>
                         <Button color="inherit" component={Link} to="/news" sx={{ mr: 2, color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
                             News
@@ -63,24 +84,19 @@ export const Header = () => {
                         </IconButton>
                     </Paper>
                     <Box sx={{ marginLeft: 45 }}>
-                        <IconButton component={Link} to="/cart" color="inherit">
+                        <IconButton color="inherit" onClick={handleCartClick}>
                             <Badge badgeContent={cartQuantity} color="secondary">
                                 <ShoppingCartIcon />
                             </Badge>
                         </IconButton>
                         {isLoggedIn ? (
                             <>
-                                <IconButton>
-                                    <Avatar alt="User Avatar" src="/path/to/avatar.jpg" sx={{ mr: 2 }} />
+                                <IconButton to="/profile" component={Link}>
+                                    <Avatar alt="User Avatar" src="https://static.vecteezy.com/system/resources/previews/024/183/502/non_2x/male-avatar-portrait-of-a-young-man-with-a-beard-illustration-of-male-character-in-modern-color-style-vector.jpg" sx={{ mr: 2 }} />
                                 </IconButton>
-                                {/* <Menu
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                <MenuItem onClick={() => navigate('/profile')}>Thông tin</MenuItem>
-                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                            </Menu> */}
+                                <Button color="inherit" onClick={handleLogout} sx={{ color: '#fff', textTransform: 'none', '&:hover': { backgroundColor: '#555' } }}>
+                                    Logout
+                                </Button>
                             </>
                         ) : (
                             <>
@@ -115,9 +131,9 @@ export const Header = () => {
                         fontSize: '2rem',
                     }}
                 >
-
                 </Box>
             )}
+            <LoginPromptDialog open={open} onClose={handleClose} />
         </>
     );
 };

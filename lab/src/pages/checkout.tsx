@@ -12,6 +12,8 @@ import {
     TextField,
     Typography,
     styled,
+    Box,
+    Paper,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -29,14 +31,14 @@ type CheckoutFormParams = {
     payment: string;
 };
 
-const Sidebar = styled('div')({
+const Sidebar = styled(Paper)({
     padding: '20px',
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 });
 
-const ProductList = styled('div')({
+const ProductList = styled(Box)({
     marginBottom: '20px',
 });
 
@@ -104,99 +106,96 @@ function Checkout() {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 10 }}>
+        <Container maxWidth="lg" sx={{ mt: 16, mb: 16 }}>
             <Grid container spacing={4}>
-                <Grid item xs={12} md={6}>
-                    <Typography variant="h3" color="textPrimary" textAlign="center" mb={4}>
-                        Checkout
-                    </Typography>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Stack spacing={3}>
-                            <FormLabel>Thông tin người nhận</FormLabel>
-                            <Controller
-                                name="name"
-                                control={control}
-                                render={({ field, fieldState }) => (
-                                    <TextField
-                                        {...field}
-                                        label="Name"
-                                        fullWidth
-                                        variant="outlined"
-                                        required
-                                        error={Boolean(fieldState.error)}
-                                        helperText={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name="phone"
-                                control={control}
-                                render={({ field, fieldState }) => (
-                                    <TextField
-                                        {...field}
-                                        label="Phone"
-                                        fullWidth
-                                        variant="outlined"
-                                        required
-                                        error={Boolean(fieldState.error)}
-                                        helperText={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name="address"
-                                control={control}
-                                render={({ field, fieldState }) => (
-                                    <TextField
-                                        {...field}
-                                        label="Address"
-                                        fullWidth
-                                        variant="outlined"
-                                        required
-                                        error={Boolean(fieldState.error)}
-                                        helperText={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                            <FormControl fullWidth>
-                                <FormLabel>Payment Method</FormLabel>
+                <Grid item xs={12} md={8}>
+                    <Paper sx={{ p: 4 }}>
+                        <Typography variant="h4" color="textPrimary" mb={4}>
+                            Checkout
+                        </Typography>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <Stack spacing={3}>
+                                <FormLabel>Recipient information</FormLabel>
                                 <Controller
-                                    name="payment"
+                                    name="name"
                                     control={control}
-                                    render={({ field }) => (
-                                        <RadioGroup {...field}>
-                                            <FormControlLabel
-                                                value="COD"
-                                                control={<Radio />}
-                                                label="Cash on Delivery"
-                                            />
-                                            <FormControlLabel
-                                                value="BANK"
-                                                control={<Radio />}
-                                                label="Bank Transfer"
-                                            />
-                                        </RadioGroup>
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            {...field}
+                                            label="Name"
+                                            fullWidth
+                                            variant="outlined"
+                                            required
+                                            error={Boolean(fieldState.error)}
+                                            helperText={fieldState.error?.message}
+                                        />
                                     )}
                                 />
-                            </FormControl>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                fullWidth
-                                sx={{
-                                    padding: '12px 0',
-                                    borderRadius: '8px',
-                                    textTransform: 'uppercase',
-                                    fontWeight: 600,
-                                }}
-                            >
-                                Submit
-                            </Button>
-                        </Stack>
-                    </form>
+                                <Controller
+                                    name="phone"
+                                    control={control}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            {...field}
+                                            label="Phone"
+                                            fullWidth
+                                            variant="outlined"
+                                            required
+                                            error={Boolean(fieldState.error)}
+                                            helperText={fieldState.error?.message}
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="address"
+                                    control={control}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            {...field}
+                                            label="Address"
+                                            fullWidth
+                                            variant="outlined"
+                                            required
+                                            error={Boolean(fieldState.error)}
+                                            helperText={fieldState.error?.message}
+                                        />
+                                    )}
+                                />
+                                <FormControl fullWidth>
+                                    <FormLabel>Payment Method</FormLabel>
+                                    <Controller
+                                        name="payment"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <RadioGroup {...field}>
+                                                <FormControlLabel
+                                                    value="COD"
+                                                    control={<Radio />}
+                                                    label="Cash on Delivery"
+                                                />
+                                            </RadioGroup>
+                                        )}
+                                    />
+                                </FormControl>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    fullWidth
+                                    sx={{
+                                        padding: '12px 0',
+                                        borderRadius: '8px',
+                                        textTransform: 'uppercase',
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Payment
+                                </Button>
+                            </Stack>
+                        </form>
+                    </Paper>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                     <Sidebar>
                         <Typography variant="h6" gutterBottom>
                             Purchased Products
@@ -213,14 +212,14 @@ function Checkout() {
                                     <Stack>
                                         <Typography variant="body1">{product.title}</Typography>
                                         <Typography variant="body2" color="textSecondary">
-                                            {product.price}đ x {quantity}
+                                            {product.price}$ x {quantity}
                                         </Typography>
                                     </Stack>
                                 </Stack>
                             ))}
                         </ProductList>
                         <Typography variant="h5" color="textPrimary" textAlign="center">
-                            Total Price: {totalPrice.toLocaleString()} VND
+                            Total Price: {totalPrice.toLocaleString()}$
                         </Typography>
                     </Sidebar>
                 </Grid>
