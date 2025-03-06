@@ -32,9 +32,9 @@ export const Sidebar = () => {
             <Divider />
             <List>
                 {[
-                    { text: 'Home', icon: <HomeIcon />, path: '/' },
-                    { text: 'Categories', icon: <CategoryIcon />, path: '/categories' },
-                    { text: 'Products', icon: <StorefrontIcon />, path: '/products' },
+                    { text: 'Home', icon: <HomeIcon />, path: '/admin' },
+                    { text: 'Categories', icon: <CategoryIcon />, path: '/admin/categories' },
+                    { text: 'Products', icon: <StorefrontIcon />, path: '/admin/products' },
                     { text: 'Cart', icon: <ShoppingCartIcon />, path: '/cart' },
                     { text: 'Contact', icon: <ContactMailIcon />, path: '/contact' },
                     { text: 'Customers', icon: <PeopleIcon />, path: '/customers' },

@@ -48,7 +48,7 @@ const EditCategory = () => {
                 theme: "colored",
                 transition: Bounce,
             });
-            navigate('/admin/category');
+            navigate('/admin/categories');
         } catch (error) {
             console.error('Error updating category:', error);
         } finally {

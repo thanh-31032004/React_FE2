@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Bounce, toast } from 'react-toastify';
@@ -6,6 +5,7 @@ import { TextField, Button, Container, Typography, Box, MenuItem, FormControl, I
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLoading } from 'src/context/loading';
+import { Category } from 'src/types/Product';
 
 type EditForm = {
     title: string;
@@ -21,9 +21,22 @@ const AdminProductEdit = () => {
     const { control, handleSubmit, setValue, formState: { errors } } = useForm<EditForm>();
     const { setLoading } = useLoading();
     const navigate = useNavigate();
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    const fetchCategories = async () => {
+        try {
+            const { data } = await axios.get('http://localhost:3000/categories');
+            setCategories(data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
 
     useEffect(() => {
+        fetchCategories();
+    }, []);
 
+    useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/products/${id}`);
@@ -68,8 +81,6 @@ const AdminProductEdit = () => {
             }, 2000);
         }
     };
-
-
 
     return (
         <Container>
@@ -128,7 +139,6 @@ const AdminProductEdit = () => {
                         />
                     )}
                 />
-
                 <Controller
                     name="image"
                     control={control}
@@ -147,6 +157,28 @@ const AdminProductEdit = () => {
                     )}
                 />
                 <Controller
+                    name="category"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: 'Category is required' }}
+                    render={({ field }) => (
+                        <FormControl fullWidth margin="normal" variant="outlined" error={!!errors.category}>
+                            <InputLabel>Category</InputLabel>
+                            <Select
+                                {...field}
+                                label="Category"
+                            >
+                                {categories.map((category) => (
+                                    <MenuItem key={category._id} value={category._id}>
+                                        {category.title}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.category && <Typography color="error">{errors.category.message}</Typography>}
+                        </FormControl>
+                    )}
+                />
+                <Controller
                     name="isShow"
                     control={control}
                     defaultValue={false}
@@ -162,7 +194,6 @@ const AdminProductEdit = () => {
                         />
                     )}
                 />
-                <p></p>
                 <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                     Update Product
                 </Button>
@@ -171,5 +202,4 @@ const AdminProductEdit = () => {
     );
 };
 
-
-export default AdminProductEdit
+export default AdminProductEdit;

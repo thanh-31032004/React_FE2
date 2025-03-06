@@ -120,8 +120,10 @@ const CategoryList = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ width: '10%' }}>ID</TableCell>
-                            <TableCell sx={{ width: '70%' }}>Name</TableCell>
+                            <TableCell sx={{ width: '50%' }}>Name</TableCell>
+                            <TableCell sx={{ width: '20%' }}>Description</TableCell>
                             <TableCell sx={{ width: '20%' }}>Actions</TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -131,6 +133,7 @@ const CategoryList = () => {
                                 <TableRow key={category._id} sx={{ backgroundColor: '#f9f9f9', borderRadius: '10px' }}>
                                     <TableCell>{category._id}</TableCell>
                                     <TableCell sx={{ whiteSpace: 'normal', wordWrap: 'break-word', overflowWrap: 'break-word', maxWidth: '300px' }}>{category.title}</TableCell>
+                                    <TableCell sx={{ whiteSpace: 'normal', wordWrap: 'break-word', overflowWrap: 'break-word', maxWidth: '300px' }}>{category.description}</TableCell>
                                     <TableCell>
                                         <Link to={`/admin/categories/edit/${category._id}`}>
                                             <IconButton color="primary">
