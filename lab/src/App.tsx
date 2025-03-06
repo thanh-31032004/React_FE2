@@ -13,6 +13,9 @@ import NotFoundPage from './pages/Notfound';
 import RegisterPage from './pages/Register';
 import Cart from './pages/cart';
 import Checkout from './pages/checkout';
+import CategoryList from './pages/categories/List';
+import CreateCategory from './pages/categories/Create';
+import EditCategory from './pages/categories/Edit';
 
 
 
@@ -42,6 +45,12 @@ function App() {
           <Route
             path="products/edit/:id"
             element={<AdminProductEdit />}
+          />
+          <Route path="categories" element={<CategoryList />} />
+          <Route path="categories/add" element={<CreateCategory />} />
+          <Route
+            path="categories/edit/:id"
+            element={<EditCategory />}
           />
         </Route>
 

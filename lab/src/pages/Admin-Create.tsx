@@ -1,23 +1,39 @@
-
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Box, MenuItem, FormControl, InputLabel, Select, FormControlLabel, Checkbox } from '@mui/material';
 import axios from 'axios';
 import { Bounce, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from 'src/context/loading';
+import { useEffect, useState } from 'react';
+import { Category } from 'src/types/Product';
 
 type AddForm = {
     title: string;
     price: number;
     description: string;
     image: string;
-    category: string,
-    isShow: boolean
+    category: string;
+    isShow: boolean;
 };
+
 const AdminCreateProduct = () => {
     const { control, handleSubmit, formState: { errors } } = useForm<AddForm>();
     const { setLoading } = useLoading();
     const navigate = useNavigate();
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    const fetchCategories = async () => {
+        try {
+            const { data } = await axios.get('http://localhost:3000/categories');
+            setCategories(data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
 
     const onSubmit: SubmitHandler<AddForm> = async (data) => {
         try {
@@ -34,7 +50,7 @@ const AdminCreateProduct = () => {
                 theme: "colored",
                 transition: Bounce,
             });
-            navigate('/admin/products'); // Điều hướng đến trang danh sách sản phẩm sau khi thêm thành công
+            navigate('/admin/products'); // Navigate to the product list page after successful addition
         } catch (error) {
             console.error('Error adding product:', error);
         } finally {
@@ -70,7 +86,6 @@ const AdminCreateProduct = () => {
                 <Controller
                     name="price"
                     control={control}
-
                     rules={{ required: 'Price is required' }}
                     render={({ field }) => (
                         <TextField
@@ -89,7 +104,7 @@ const AdminCreateProduct = () => {
                     name="description"
                     control={control}
                     defaultValue=""
-                    rules={{ required: 'Descriptionis required' }}
+                    rules={{ required: 'Description is required' }}
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -102,7 +117,6 @@ const AdminCreateProduct = () => {
                         />
                     )}
                 />
-
                 <Controller
                     name="image"
                     control={control}
@@ -121,6 +135,28 @@ const AdminCreateProduct = () => {
                     )}
                 />
                 <Controller
+                    name="category"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: 'Category is required' }}
+                    render={({ field }) => (
+                        <FormControl fullWidth margin="normal" variant="outlined" error={!!errors.category}>
+                            <InputLabel>Category</InputLabel>
+                            <Select
+                                {...field}
+                                label="Category"
+                            >
+                                {categories.map((category) => (
+                                    <MenuItem key={category._id} value={category._id}>
+                                        {category.title}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.category && <Typography color="error">{errors.category.message}</Typography>}
+                        </FormControl>
+                    )}
+                />
+                <Controller
                     name="isShow"
                     control={control}
                     defaultValue={false}
@@ -136,7 +172,6 @@ const AdminCreateProduct = () => {
                         />
                     )}
                 />
-                <p></p>
                 <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                     Add Product
                 </Button>
@@ -145,6 +180,4 @@ const AdminCreateProduct = () => {
     );
 };
 
-
-
-export default AdminCreateProduct
+export default AdminCreateProduct;

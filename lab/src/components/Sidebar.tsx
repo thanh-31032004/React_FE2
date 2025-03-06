@@ -38,7 +38,7 @@ export const Sidebar = () => {
                     { text: 'Cart', icon: <ShoppingCartIcon />, path: '/cart' },
                     { text: 'Contact', icon: <ContactMailIcon />, path: '/contact' },
                     { text: 'Customers', icon: <PeopleIcon />, path: '/customers' },
-                ].map((item, index) => (
+                ].map((item) => (
                     <ListItemButton key={item.text} component="a" href={item.path}>
                         <ListItemIcon>{item.icon}</ListItemIcon>
                         <ListItemText primary={item.text} />

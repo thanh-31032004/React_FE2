@@ -14,7 +14,6 @@ import {
     TableHead,
     TableRow,
     TablePagination,
-    Avatar,
     IconButton,
     Dialog,
     DialogTitle,
@@ -25,26 +24,26 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Product } from 'src/types/Product';
+import { Category } from 'src/types/Product';
 import { Link } from 'react-router-dom';
 import { useLoading } from 'src/context/loading';
 
-const AdminProductList = () => {
-    const [products, setProducts] = useState<Product[]>([]);
+const CategoryList = () => {
+    const [categories, setCategories] = useState<Category[]>([]);
     const { setLoading } = useLoading();
     const [page, setPage] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const getAllProduct = async () => {
+    const getAllCategories = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get("http://localhost:3000/products");
-            setProducts(data);
+            const { data } = await axios.get("http://localhost:3000/categories");
+            setCategories(data);
             setError(null);
         } catch (error) {
             console.log(error);
-            setError('Failed to load products. Please try again.');
+            setError('Failed to load categories. Please try again.');
         } finally {
             setTimeout(() => {
                 setLoading(false);
@@ -53,7 +52,7 @@ const AdminProductList = () => {
     };
 
     useEffect(() => {
-        getAllProduct();
+        getAllCategories();
     }, []);
 
     const handleChangePage = (event: any, newPage: any) => {
@@ -66,19 +65,19 @@ const AdminProductList = () => {
     };
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
-    const handleDelete = (id: any) => {
-        setSelectedProductId(id);
+    const handleDelete = (id: string) => {
+        setSelectedCategoryId(id);
         setOpenDialog(true);
     };
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:3000/products/${selectedProductId}`);
+            await axios.delete(`/categories/${selectedCategoryId}`);
             setLoading(true);
-            setProducts(prevProducts => prevProducts.filter(product => product._id !== selectedProductId));
-            toast.success('Successfully!', {
+            setCategories(prevCategories => prevCategories.filter(category => category._id !== selectedCategoryId));
+            toast.success('Successfully deleted!', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -91,7 +90,7 @@ const AdminProductList = () => {
             });
             setOpenDialog(false);
         } catch (error) {
-            console.error('Error deleting product:', error);
+            console.error('Error deleting category:', error);
         } finally {
             setTimeout(() => {
                 setLoading(false);
@@ -106,14 +105,14 @@ const AdminProductList = () => {
     return (
         <Container sx={{ mt: 4 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h4">Product List</Typography>
+                <Typography variant="h4">Category List</Typography>
                 <Button
                     variant="contained"
                     color="primary"
                     startIcon={<AddIcon />}
-                    component={Link} to={'/admin/products/add'}
+                    component={Link} to={'/admin/categories/add'}
                 >
-                    Add Product
+                    Add Category
                 </Button>
             </Box>
             <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
@@ -121,31 +120,24 @@ const AdminProductList = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ width: '10%' }}>ID</TableCell>
-                            <TableCell sx={{ width: '40%' }}>Name</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Price</TableCell>
-                            <TableCell sx={{ width: '20%' }}>Image</TableCell>
+                            <TableCell sx={{ width: '70%' }}>Name</TableCell>
                             <TableCell sx={{ width: '20%' }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products
-                            .filter(product => product.isShow != false)
+                        {categories
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((product) => (
-                                <TableRow key={product._id} sx={{ backgroundColor: '#f9f9f9', borderRadius: '10px' }}>
-                                    <TableCell>{product._id}</TableCell>
-                                    <TableCell sx={{ whiteSpace: 'normal', wordWrap: 'break-word', overflowWrap: 'break-word', maxWidth: '300px' }}>{product.title.substring(0, 30)}...</TableCell>
-                                    <TableCell>{product.price}$</TableCell>
+                            .map((category) => (
+                                <TableRow key={category._id} sx={{ backgroundColor: '#f9f9f9', borderRadius: '10px' }}>
+                                    <TableCell>{category._id}</TableCell>
+                                    <TableCell sx={{ whiteSpace: 'normal', wordWrap: 'break-word', overflowWrap: 'break-word', maxWidth: '300px' }}>{category.title}</TableCell>
                                     <TableCell>
-                                        <Avatar alt={product.title} src={product.image} />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Link to={`/admin/products/edit/${product._id}`}>
+                                        <Link to={`/admin/categories/edit/${category._id}`}>
                                             <IconButton color="primary">
                                                 <EditIcon />
                                             </IconButton>
                                         </Link>
-                                        <IconButton onClick={() => handleDelete(product._id)} color="secondary">
+                                        <IconButton onClick={() => handleDelete(category._id)} color="secondary">
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
@@ -157,7 +149,7 @@ const AdminProductList = () => {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={products.length}
+                count={categories.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -172,7 +164,7 @@ const AdminProductList = () => {
             >
                 <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
                 <DialogContent>
-                    <Typography>Are you sure you want to delete this product?</Typography>
+                    <Typography>Are you sure you want to delete this category?</Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={cancelDelete} color="primary">
@@ -187,4 +179,4 @@ const AdminProductList = () => {
     );
 };
 
-export default AdminProductList;
+export default CategoryList;
